@@ -13,20 +13,43 @@ val perfiles = listOf(
 //   "gama baja" si tiene menos de 3 GB de RAM, "gama media" si tiene menos de 6 GB
 //   y "gama alta" en otro caso. Usa when sin argumento:  when { p.ramGb < 3 -> ... }
 
-
+fun gama(p: Perfil): String{
+    return when {
+        p.ramGb < 3 -> "gama baja"
+        p.ramGb < 6 -> "gama media"
+        else -> "gama alta"
+    }
+}
 // PASO 2: escribe la función diferencia(mio: Perfil, otro: Perfil): String que devuelva:
 //   "+6 GB de RAM, +1.5\" de pantalla, API 1 más moderna"
 // - RAM:      val dRam = mio.ramGb - otro.ramGb  y muestra el signo + si es positiva
 //             (pista: if (dRam >= 0) "+$dRam" else "$dRam")
 // - Pantalla: redondea a 1 decimal con  Math.round((mio.pulgadas - otro.pulgadas) * 10) / 10.0
 // - API:      "API N más moderna", "API N más antigua" o "misma API"
-
+fun diferencia(mio: Perfil, otro: Perfil): String{
+    val dRam = mio.ramGb - otro.ramGb
+    return (if(dRam >= 0){
+        "+$dRam"
+    }else{
+        "$dRam"
+    }) + " GB de RAM, " + Math.round((mio.pulgadas - otro.pulgadas)*10)/10.0 + "\" de pantalla, " + (if (mio.api> otro.api){
+        val dApi = mio.api -otro.api
+        "API " + dApi + " más moderna"
+    } else if(mio.api<otro.api){
+        val dApi = otro.api-mio.api
+        "API " + dApi + " más antigua"
+    }else { "misma API"})
+}
 
 fun main() {
     // PASO 3: cambia estos valores por los de TU móvil (mira mi_movil.md)
     val miMovil = Perfil("Mi móvil", 8, 6.5, 34)
-
     // PASO 4: muestra  Mi móvil: 8 GB RAM · 6.5" · API 34 -> gama alta
     //         y después, para cada perfil, una línea "  frente a <nombre>: <diferencia>"
+    println(miMovil.nombre + ": " + miMovil.ramGb + " GB RAM · " + miMovil.pulgadas + "\" · API "+ miMovil.api + " -> " + gama(miMovil))
+
+    for (otro in perfiles){
+        println("  frente a "+otro.nombre + ": " + diferencia(miMovil, otro))
+    }
 
 }
